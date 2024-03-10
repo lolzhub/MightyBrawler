@@ -13,5 +13,7 @@ public class Game {
         gamePanel = new GamePanel();
         // Initialize the game window with the game panel
         gameWindow = new GameWindow(gamePanel);
+//        gamePanel.setFocusable(true);
+        gamePanel.requestFocus();
     }
 }

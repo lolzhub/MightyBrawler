@@ -15,6 +15,7 @@ public class GameWindow {
         jframe.setSize(400,400); // Set the size of the window
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Set default close operation
         jframe.add(gamePanel); // Add the game panel to the window
+        jframe.setLocationRelativeTo(null);
         jframe.setVisible(true); // Make the window visible
     }
 }
