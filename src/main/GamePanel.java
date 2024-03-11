@@ -123,14 +123,16 @@ public class GamePanel extends JPanel {
         }
     }
 
-    // Method to paint components on the panel
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g); // Call the superclass method to ensure proper painting
-
+    public void updateGame(){
         // Update animation tick, set animation, and update position
         updateAnimationTick();
         setAnimation();
         updatePos();
+    }
+
+    // Method to paint components on the panel
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g); // Call the superclass method to ensure proper painting
 
         // Draw the current frame of the animation
         g.drawImage(animations[playerAction][aniIndex], (int) xDelta, (int) yDelta, 256, 160, null);

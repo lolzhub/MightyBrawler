@@ -9,6 +9,8 @@ public class Game implements Runnable {
     private Thread gameThread;
     private final int FPS_SET = 120;
 
+    private final int UPS_SET = 200;
+
     // Constructor for the Game class
     public Game() {
         // Initialize the game panel and window
@@ -28,29 +30,47 @@ public class Game implements Runnable {
         gameThread.start();
     }
 
+    public void update(){
+        gamePanel.updateGame();
+    }
+
     // Run method for the game loop
     @Override
     public void run() {
         // Calculate the time per frame in nanoseconds
         double timePerFrame = 1000000000.0 / FPS_SET;
-        // Record the time of the last frame
-        long lastFrame = System.nanoTime();
-        // Variables for tracking frames per second
-        long now;
+
+        double timePerUpdate=1000000000.0 / UPS_SET;
+
+        long previousTime=System.nanoTime();
+
         int frames = 0;
+        int updates=0;
         long lastCheck = System.currentTimeMillis();
+
+        double deltaU=0;
+        double deltaF=0;
 
         // Main game loop
         while (true) {
-            now = System.nanoTime();
-            // Check if it's time to render the next frame
-            if (now - lastFrame >= timePerFrame) {
+            long currentTime=System.nanoTime();
+            deltaU+=(currentTime-previousTime)/timePerUpdate;
+            deltaF+=(currentTime-previousTime)/timePerFrame;
+
+            previousTime=currentTime;
+            if (deltaU>=1){
+                update();
+                updates++;
+                deltaU--;
+            }
+
+            if (deltaF>=1){
                 // Repaint the game panel
                 gamePanel.repaint();
-                // Update the last frame time
-                lastFrame = now;
                 // Increment the frame count
                 frames++;
+                deltaF--;
+
             }
 
             // Check if it's time to update the frames per second count
@@ -58,9 +78,10 @@ public class Game implements Runnable {
                 // Update the last check time
                 lastCheck = System.currentTimeMillis();
                 // Print the frames per second
-                System.out.println("FPS: " + frames);
+                System.out.println("FPS: " + frames + "| "+"UPS: "+updates);
                 // Reset the frame count
                 frames = 0;
+                updates=0;
             }
         }
     }
