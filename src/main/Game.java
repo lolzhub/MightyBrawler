@@ -3,19 +3,18 @@ package main;
 // Class representing the game logic and setup
 public class Game implements Runnable {
 
-    // Fields to hold the game window and panel
+    // Fields to hold the game window, panel, thread, and frames per second
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
-    private final int FPS_SET = 120; // Set the desired frames per second for the game
+    private final int FPS_SET = 120;
 
     // Constructor for the Game class
     public Game() {
-        // Initialize the game panel
+        // Initialize the game panel and window
         gamePanel = new GamePanel();
-        // Initialize the game window with the game panel
         gameWindow = new GameWindow(gamePanel);
-        // Set focus to the game panel to ensure key events are captured
+        // Request focus for the game panel
         gamePanel.requestFocus();
         // Start the game loop
         startGameLoop();
