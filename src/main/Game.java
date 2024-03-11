@@ -1,105 +1,117 @@
 package main;
 
+import java.awt.Graphics;
+
 import entities.Player;
+import levels.LevelManager;
 
-import java.awt.*;
-
-// Class representing the game logic and setup
 public class Game implements Runnable {
 
-    // Fields to hold the game window, panel, thread, frames per second, and updates per second
-    private GameWindow gameWindow;
-    private GamePanel gamePanel;
-    private Thread gameThread;
-    private final int FPS_SET = 120;
-    private final int UPS_SET = 200;
-    private Player player;
+    // Fields declaration
+    private GameWindow gameWindow; // Instance of the game window
+    private GamePanel gamePanel; // Instance of the game panel
+    private Thread gameThread; // Thread for running the game loop
+    private final int FPS_SET = 120; // Target frames per second
+    private final int UPS_SET = 200; // Target updates per second
+    private Player player; // Instance of the player entity
+    private LevelManager levelManager; // Instance of the level manager
 
-    // Constructor for the Game class
+    // Constants declaration
+    public final static int TILES_DEFAULT_SIZE = 32; // Default size of tiles
+    public final static float SCALE = 2f; // Scaling factor for the game
+    public final static int TILES_IN_WIDTH = 26; // Number of tiles in width
+    public final static int TILES_IN_HEIGHT = 14; // Number of tiles in height
+    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE); // Scaled size of tiles
+    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH; // Width of the game window
+    public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT; // Height of the game window
+
+    // Constructor
     public Game() {
-        initClasses();
-        // Initialize the game panel and window
-        gamePanel = new GamePanel(this);
-        gameWindow = new GameWindow(gamePanel);
-        // Request focus for the game panel
-        gamePanel.requestFocus();
-        // Start the game loop
-        startGameLoop();
+        initClasses(); // Initialize necessary classes
+
+        gamePanel = new GamePanel(this); // Create a game panel instance
+        gameWindow = new GameWindow(gamePanel); // Create a game window instance and associate it with the game panel
+        gamePanel.requestFocus(); // Request focus for the game panel
+
+        startGameLoop(); // Start the game loop
     }
 
-    // Method to initialize game-related classes
+    // Method to initialize necessary classes
     private void initClasses() {
-        player = new Player(200, 200);
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE)); // Initialize player entity
+        levelManager = new LevelManager(this); // Initialize level manager
     }
 
     // Method to start the game loop
     private void startGameLoop() {
-        // Create a new thread for the game loop
-        gameThread = new Thread(this);
-        // Start the thread
-        gameThread.start();
+        gameThread = new Thread(this); // Create a new thread for the game loop
+        gameThread.start(); // Start the thread
     }
 
-    // Method to update game logic
+    // Method to update game state
     public void update() {
-        player.update();
+        levelManager.update(); // Update level manager
+        player.update(); // Update player entity
     }
 
     // Method to render game graphics
     public void render(Graphics g) {
-        player.render(g);
+        levelManager.draw(g); // Draw level graphics
+        player.render(g); // Render player graphics
     }
 
-    // Run method for the game loop
+    // Runnable interface's method for running the game loop
     @Override
     public void run() {
-        // Calculate the time per frame and per update in nanoseconds
+        // Variables initialization for timing control
         double timePerFrame = 1000000000.0 / FPS_SET;
         double timePerUpdate = 1000000000.0 / UPS_SET;
-        // Record the previous time
         long previousTime = System.nanoTime();
-        // Variables for tracking frames and updates
         int frames = 0;
         int updates = 0;
         long lastCheck = System.currentTimeMillis();
         double deltaU = 0;
         double deltaF = 0;
 
-        // Main game loop
+        // Game loop
         while (true) {
             long currentTime = System.nanoTime();
+
+            // Update timing control variables
             deltaU += (currentTime - previousTime) / timePerUpdate;
             deltaF += (currentTime - previousTime) / timePerFrame;
             previousTime = currentTime;
 
+            // Update game logic if it's time for an update
             if (deltaU >= 1) {
-                update(); // Update game logic
-                updates++; // Increment update count
-                deltaU--; // Decrement update delta
+                update();
+                updates++;
+                deltaU--;
             }
 
+            // Render game graphics if it's time for a frame
             if (deltaF >= 1) {
-                gamePanel.repaint(); // Repaint game panel
-                frames++; // Increment frame count
-                deltaF--; // Decrement frame delta
+                gamePanel.repaint();
+                frames++;
+                deltaF--;
             }
 
-            // Check if it's time to update frames and updates per second count
+            // Print FPS and UPS every second
             if (System.currentTimeMillis() - lastCheck >= 1000) {
-                lastCheck = System.currentTimeMillis(); // Update last check time
-                System.out.println("FPS: " + frames + " | UPS: " + updates); // Print FPS and UPS
-                frames = 0; // Reset frame count
-                updates = 0; // Reset update count
+                lastCheck = System.currentTimeMillis();
+                System.out.println("FPS: " + frames + " | UPS: " + updates);
+                frames = 0;
+                updates = 0;
             }
         }
     }
 
-    // Method called when window loses focus
-    public void windowFocusLost(){
-        player.resetDirBooleans();
+    // Method to handle window focus lost event
+    public void windowFocusLost() {
+        player.resetDirBooleans(); // Reset player direction booleans
     }
 
-    // Getter for the player object
+    // Getter method for the player entity
     public Player getPlayer() {
         return player;
     }

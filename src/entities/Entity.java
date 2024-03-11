@@ -1,14 +1,18 @@
 package entities;
 
-// Abstract class representing an entity in the game
+// Abstract class representing a game entity
 public abstract class Entity {
 
-    // Fields to hold the coordinates of the entity
+    // Protected fields to represent the position and dimensions of the entity
     protected float x, y;
+    protected int width, height;
 
-    // Constructor for the Entity class
-    public Entity(float x, float y){
+    // Constructor to initialize the entity with a given position and dimensions
+    public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
+
 }

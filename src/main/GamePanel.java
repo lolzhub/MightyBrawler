@@ -2,59 +2,48 @@ package main;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
 
-import static utilz.Constants.PlayerConstants.*;
-import static utilz.Constants.Directions.*;
-
-// Class representing the panel for the game
+// Class representing the main panel of the game
 public class GamePanel extends JPanel {
 
-    // Fields for mouse inputs, delta values, image, animations, animation tick, animation index, animation speed, player action, player direction, and movement flag
-    private MouseInputs mouseInputs;
-    private Game game;
+    // Fields declaration
+    private MouseInputs mouseInputs; // Instance for handling mouse inputs
+    private Game game; // Reference to the main game instance
 
-    // Constructor for the GamePanel class
+    // Constructor
     public GamePanel(Game game) {
-        // Initialize mouse inputs object and add listeners
-        mouseInputs = new MouseInputs(this);
-        this.game = game;
-
-        // Set preferred size of the panel
-        setPanelSize();
-        // Add keyboard and mouse inputs listeners
-        addKeyListener(new KeyboardInputs(this));
-        addMouseListener(mouseInputs);
-        addMouseMotionListener(mouseInputs);
+        mouseInputs = new MouseInputs(this); // Initialize mouse inputs handler
+        this.game = game; // Set the reference to the main game instance
+        setPanelSize(); // Set panel size
+        addKeyListener(new KeyboardInputs(this)); // Add keyboard input listener
+        addMouseListener(mouseInputs); // Add mouse click listener
+        addMouseMotionListener(mouseInputs); // Add mouse motion listener
     }
 
-    // Method to set the preferred size of the panel
+    // Method to set the panel size
     private void setPanelSize() {
-        Dimension size = new Dimension(1280, 800);
-        setPreferredSize(size);
+        Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT); // Create dimension with game width and height
+        setPreferredSize(size); // Set preferred panel size
     }
 
-    // Method to update game logic
+    // Method to update the game state
     public void updateGame() {
-        game.update();
+        // Method body can be implemented to update the game state if necessary
     }
 
-    // Method to paint components on the panel
+    // Method to paint component (override from JPanel)
     public void paintComponent(Graphics g) {
-        super.paintComponent(g); // Call the superclass method to ensure proper painting
-        game.render(g);
+        super.paintComponent(g); // Call superclass's paintComponent method
+        game.render(g); // Render the game graphics
     }
 
-    // Getter for the game object
+    // Method to get the main game instance
     public Game getGame() {
-        return game;
+        return game; // Return the main game instance
     }
 }
