@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import main.GamePanel;
+
 import static utilz.Constants.Directions.*;
 
 // Class handling keyboard inputs for the game panel
@@ -28,12 +29,10 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent e) {
         // Switch statement to handle released keys
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_S:
-            case KeyEvent.VK_D:
-                gamePanel.setMoving(false); // Set moving flag to false
-                break;
+            case KeyEvent.VK_W -> gamePanel.getGame().getPlayer().setUp(false); // Set moving flag to false
+            case KeyEvent.VK_A -> gamePanel.getGame().getPlayer().setLeft(false); // Set moving flag to false
+            case KeyEvent.VK_S -> gamePanel.getGame().getPlayer().setDown(false); // Set moving flag to false
+            case KeyEvent.VK_D -> gamePanel.getGame().getPlayer().setRight(false); // Set moving flag to false
         }
     }
 
@@ -42,18 +41,11 @@ public class KeyboardInputs implements KeyListener {
     public void keyPressed(KeyEvent e) {
         // Switch statement to handle pressed keys
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                gamePanel.setDirection(UP); // Set direction to UP
-                break;
-            case KeyEvent.VK_A:
-                gamePanel.setDirection(LEFT); // Set direction to LEFT
-                break;
-            case KeyEvent.VK_S:
-                gamePanel.setDirection(DOWN); // Set direction to DOWN
-                break;
-            case KeyEvent.VK_D:
-                gamePanel.setDirection(RIGHT); // Set direction to RIGHT
-                break;
+            case KeyEvent.VK_W -> gamePanel.getGame().getPlayer().setUp(true); // Set moving flag to true
+            case KeyEvent.VK_A -> gamePanel.getGame().getPlayer().setLeft(true); // Set moving flag to true
+            case KeyEvent.VK_S -> gamePanel.getGame().getPlayer().setDown(true); // Set moving flag to true
+            case KeyEvent.VK_D -> gamePanel.getGame().getPlayer().setRight(true); // Set moving flag to true
+            case KeyEvent.VK_J -> gamePanel.getGame().getPlayer().setAttacking(true); // Set moving flag to true
         }
     }
 }
