@@ -9,47 +9,43 @@ import javax.imageio.ImageIO;
 
 import main.Game;
 
-// Utility class for loading and saving resources
 public class LoadSave {
 
-    // Constants for file names
     public static final String PLAYER_ATLAS = "player_sprites.png";
     public static final String LEVEL_ATLAS = "outside_sprites.png";
     public static final String LEVEL_ONE_DATA = "level_one_data.png";
 
-    // Method to load a sprite atlas image
     public static BufferedImage GetSpriteAtlas(String fileName) {
         BufferedImage img = null;
-        InputStream is = LoadSave.class.getResourceAsStream("/" + fileName); // Get input stream for the specified file
+        InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);
         try {
-            img = ImageIO.read(is); // Read the image from the input stream
+            img = ImageIO.read(is);
 
         } catch (IOException e) {
-            e.printStackTrace(); // Print stack trace if an IO error occurs
+            e.printStackTrace();
         } finally {
             try {
-                is.close(); // Close the input stream
+                is.close();
             } catch (IOException e) {
-                e.printStackTrace(); // Print stack trace if an IO error occurs while closing the stream
+                e.printStackTrace();
             }
         }
-        return img; // Return the loaded image
+        return img;
     }
 
-    // Method to get level data from an image
     public static int[][] GetLevelData() {
-        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH]; // Create 2D array for level data
-        BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA); // Load the level data image
+        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
+        BufferedImage img = GetSpriteAtlas(LEVEL_ONE_DATA);
 
-        // Loop through each pixel of the image
         for (int j = 0; j < img.getHeight(); j++)
             for (int i = 0; i < img.getWidth(); i++) {
-                Color color = new Color(img.getRGB(i, j)); // Get color of the pixel
-                int value = color.getRed(); // Get the red component of the color
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getRed();
                 if (value >= 48)
-                    value = 0; // If the value exceeds 48, set it to 0 (assuming it's a level indicator)
-                lvlData[j][i] = value; // Store the value in the level data array
+                    value = 0;
+                lvlData[j][i] = value;
             }
-        return lvlData; // Return the level data
+        return lvlData;
+
     }
 }

@@ -15,4 +15,10 @@ public class Level {
     public int getSpriteIndex(int x, int y) {
         return lvlData[y][x]; // Return the sprite index at the given coordinates in the level data
     }
+
+    // Method to get the level data
+    public int[][] getLevelData() {
+        return lvlData;
+    }
+
 }

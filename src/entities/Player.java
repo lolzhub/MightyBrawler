@@ -1,163 +1,163 @@
 package entities;
 
-import static utilz.Constants.PlayerConstants.*; // Importing static constants from PlayerConstants class.
-
+import static utilz.Constants.PlayerConstants.*;
+import static utilz.HelpMethods.CanMoveHere;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
 
+import main.Game;
 import utilz.LoadSave;
 
-public class Player extends Entity { // Declaring a class named Player which extends Entity.
+public class Player extends Entity {
+    private BufferedImage[][] animations;
+    private int aniTick, aniIndex, aniSpeed = 25;
+    private int playerAction = IDLE;
+    private boolean moving = false, attacking = false;
+    private boolean left, up, right, down;
+    private float playerSpeed = 2.0f;
+    private int[][] lvlData;
+    private float xDrawOffset = 21 * Game.SCALE;
+    private float yDrawOffset = 4 * Game.SCALE;
 
-    // Member variables declaration.
-    private BufferedImage[][] animations; // A 2D array to hold animation frames.
-    private int aniTick, aniIndex, aniSpeed = 25; // Variables for animation control.
-    private int playerAction = IDLE; // Variable to represent the current action of the player.
-    private boolean moving = false, attacking = false; // Flags to indicate player movement and attack.
-    private boolean left, up, right, down; // Flags to indicate player direction.
-    private float playerSpeed = 2.0f; // Variable to represent player movement speed.
-
-    // Constructor to initialize Player object with position and dimensions.
     public Player(float x, float y, int width, int height) {
-        super(x, y, width, height); // Calling superclass constructor to initialize position and dimensions.
-        loadAnimations(); // Loading player animations.
+        super(x, y, width, height);
+        loadAnimations();
+        initHitbox(x, y, 20 * Game.SCALE, 28 * Game.SCALE);
+
     }
 
-    // Method to update player state.
     public void update() {
-        updatePos(); // Update player position.
-        updateAnimationTick(); // Update animation frame.
-        setAnimation(); // Set appropriate animation based on player action.
+        updatePos();
+        updateAnimationTick();
+        setAnimation();
     }
 
-    // Method to render player graphics.
     public void render(Graphics g) {
-        g.drawImage(animations[playerAction][aniIndex], (int) x, (int) y, width, height, null); // Rendering player sprite.
+        g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width, height, null);
+        drawHitbox(g);
     }
 
-    // Method to update animation tick.
     private void updateAnimationTick() {
-        aniTick++; // Increment animation tick.
-        if (aniTick >= aniSpeed) { // Check if it's time to change animation frame.
-            aniTick = 0; // Reset animation tick.
-            aniIndex++; // Move to the next frame.
-            if (aniIndex >= GetSpriteAmount(playerAction)) { // Check if reached end of animation sequence.
-                aniIndex = 0; // Reset animation frame index.
-                attacking = false; // If attacking, set attacking flag to false.
+        aniTick++;
+        if (aniTick >= aniSpeed) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= GetSpriteAmount(playerAction)) {
+                aniIndex = 0;
+                attacking = false;
             }
+
         }
+
     }
 
-    // Method to set player animation based on current state.
     private void setAnimation() {
-        int startAni = playerAction; // Store current player action.
+        int startAni = playerAction;
 
-        // Determine player action based on movement and attacking flags.
         if (moving)
-            playerAction = RUNNING; // If player is moving, set animation to running.
+            playerAction = RUNNING;
         else
-            playerAction = IDLE; // If player is not moving, set animation to idle.
+            playerAction = IDLE;
 
         if (attacking)
-            playerAction = ATTACK_1; // If player is attacking, set animation to attack.
+            playerAction = ATTACK_1;
 
-        if (startAni != playerAction) // Check if animation changed.
-            resetAniTick(); // If animation changed, reset animation tick.
+        if (startAni != playerAction)
+            resetAniTick();
     }
 
-    // Method to reset animation tick and index.
     private void resetAniTick() {
-        aniTick = 0; // Reset animation tick.
-        aniIndex = 0; // Reset animation index.
+        aniTick = 0;
+        aniIndex = 0;
     }
 
-    // Method to update player position based on direction flags.
     private void updatePos() {
-        moving = false; // Reset moving flag.
+        moving = false;
+        if (!left && !right && !up && !down)
+            return;
 
-        // Update player position based on direction flags.
-        if (left && !right) {
-            x -= playerSpeed; // Move player left.
-            moving = true; // Set moving flag.
-        } else if (right && !left) {
-            x += playerSpeed; // Move player right.
-            moving = true; // Set moving flag.
+        float xSpeed = 0, ySpeed = 0;
+
+        if (left && !right)
+            xSpeed = -playerSpeed;
+        else if (right && !left)
+            xSpeed = playerSpeed;
+
+        if (up && !down)
+            ySpeed = -playerSpeed;
+        else if (down && !up)
+            ySpeed = playerSpeed;
+
+//		if (CanMoveHere(x + xSpeed, y + ySpeed, width, height, lvlData)) {
+//			this.x += xSpeed;
+//			this.y += ySpeed;
+//			moving = true;
+//		}
+
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, lvlData)) {
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
+            moving = true;
         }
 
-        if (up && !down) {
-            y -= playerSpeed; // Move player up.
-            moving = true; // Set moving flag.
-        } else if (down && !up) {
-            y += playerSpeed; // Move player down.
-            moving = true; // Set moving flag.
-        }
     }
 
-    // Method to load player animations from sprite atlas.
     private void loadAnimations() {
-        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS); // Load sprite atlas for player.
 
-        animations = new BufferedImage[9][6]; // Initialize animation array.
+        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-        // Populate animation array with sub-images from sprite atlas.
+        animations = new BufferedImage[9][6];
         for (int j = 0; j < animations.length; j++)
             for (int i = 0; i < animations[j].length; i++)
-                animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40); // Extract sub-image for animation frame.
+                animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
+
     }
 
-    // Method to reset direction flags.
+    public void loadLvlData(int[][] lvlData) {
+        this.lvlData = lvlData;
+    }
+
     public void resetDirBooleans() {
-        left = false; // Reset left flag.
-        right = false; // Reset right flag.
-        up = false; // Reset up flag.
-        down = false; // Reset down flag.
+        left = false;
+        right = false;
+        up = false;
+        down = false;
     }
 
-    // Setter method to set attacking flag.
     public void setAttacking(boolean attacking) {
-        this.attacking = attacking; // Set attacking flag.
+        this.attacking = attacking;
     }
 
-    // Getter method to check left direction flag.
     public boolean isLeft() {
-        return left; // Return left flag.
+        return left;
     }
 
-    // Setter method to set left direction flag.
     public void setLeft(boolean left) {
-        this.left = left; // Set left flag.
+        this.left = left;
     }
 
-    // Getter method to check up direction flag.
     public boolean isUp() {
-        return up; // Return up flag.
+        return up;
     }
 
-    // Setter method to set up direction flag.
     public void setUp(boolean up) {
-        this.up = up; // Set up flag.
+        this.up = up;
     }
 
-    // Getter method to check right direction flag.
     public boolean isRight() {
-        return right; // Return right flag.
+        return right;
     }
 
-    // Setter method to set right direction flag.
     public void setRight(boolean right) {
-        this.right = right; // Set right flag.
+        this.right = right;
     }
 
-    // Getter method to check down direction flag.
     public boolean isDown() {
-        return down; // Return down flag.
+        return down;
     }
 
-    // Setter method to set down direction flag.
     public void setDown(boolean down) {
-        this.down = down; // Set down flag.
+        this.down = down;
     }
+
 }
