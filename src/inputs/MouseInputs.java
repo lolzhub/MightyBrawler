@@ -4,60 +4,65 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import gamestates.Gamestate;
 import main.GamePanel;
 
-// Class handling mouse inputs for the game panel
 public class MouseInputs implements MouseListener, MouseMotionListener {
 
-    // Field to hold the game panel
     private GamePanel gamePanel;
 
-    // Constructor for the MouseInputs class
     public MouseInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
-    // Method handling mouse dragged event
     @Override
     public void mouseDragged(MouseEvent e) {
-        // Not implemented
+        // TODO Auto-generated method stub
+
     }
 
-    // Method handling mouse moved event
     @Override
     public void mouseMoved(MouseEvent e) {
-        // Not implemented
+
     }
 
-    // Method handling mouse clicked event
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            gamePanel.getGame().getPlayer().setAttacking(true);
+        switch (Gamestate.state) {
+            case MENU:
+                gamePanel.getGame().getMenu().mouseClicked(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseClicked(e);
+                break;
+            default:
+                break;
+
         }
+
     }
 
-    // Method handling mouse pressed event
     @Override
     public void mousePressed(MouseEvent e) {
-        // Not implemented
+        // TODO Auto-generated method stub
+
     }
 
-    // Method handling mouse released event
     @Override
     public void mouseReleased(MouseEvent e) {
-        // Not implemented
+        // TODO Auto-generated method stub
+
     }
 
-    // Method handling mouse entered event
     @Override
     public void mouseEntered(MouseEvent e) {
-        // Not implemented
+        // TODO Auto-generated method stub
+
     }
 
-    // Method handling mouse exited event
     @Override
     public void mouseExited(MouseEvent e) {
-        // Not implemented
+
     }
+
 }
