@@ -4,6 +4,18 @@ import main.Game;
 
 public class Constants {
 
+	public static class Environment {
+		public static final int BIG_CLOUD_WIDTH_DEFAULT = 448;
+		public static final int BIG_CLOUD_HEIGHT_DEFAULT = 101;
+		public static final int SMALL_CLOUD_WIDTH_DEFAULT = 74;
+		public static final int SMALL_CLOUD_HEIGHT_DEFAULT = 24;
+
+		public static final int BIG_CLOUD_WIDTH = (int) (BIG_CLOUD_WIDTH_DEFAULT * Game.SCALE);
+		public static final int BIG_CLOUD_HEIGHT = (int) (BIG_CLOUD_HEIGHT_DEFAULT * Game.SCALE);
+		public static final int SMALL_CLOUD_WIDTH = (int) (SMALL_CLOUD_WIDTH_DEFAULT * Game.SCALE);
+		public static final int SMALL_CLOUD_HEIGHT = (int) (SMALL_CLOUD_HEIGHT_DEFAULT * Game.SCALE);
+	}
+
 	public static class UI {
 		public static class Buttons {
 			public static final int B_WIDTH_DEFAULT = 140;
@@ -54,22 +66,22 @@ public class Constants {
 
 		public static int GetSpriteAmount(int player_action) {
 			switch (player_action) {
-			case RUNNING:
-				return 6;
-			case IDLE:
-				return 5;
-			case HIT:
-				return 4;
-			case JUMP:
-			case ATTACK_1:
-			case ATTACK_JUMP_1:
-			case ATTACK_JUMP_2:
-				return 3;
-			case GROUND:
-				return 2;
-			case FALLING:
-			default:
-				return 1;
+				case RUNNING:
+					return 6;
+				case IDLE:
+					return 5;
+				case HIT:
+					return 4;
+				case JUMP:
+				case ATTACK_1:
+				case ATTACK_JUMP_1:
+				case ATTACK_JUMP_2:
+					return 3;
+				case GROUND:
+					return 2;
+				case FALLING:
+				default:
+					return 1;
 			}
 		}
 	}
