@@ -58,7 +58,7 @@ public class Playing extends State implements Statemethods {
         if (!paused) {
             levelManager.update();
             player.update();
-            enemyManager.update();
+            enemyManager.update(levelManager.getCurrentLevel().getLevelData());
             checkCloseToBorder();
         } else {
             pauseOverlay.update();
@@ -123,11 +123,8 @@ public class Playing extends State implements Statemethods {
             case KeyEvent.VK_D:
                 player.setRight(true);
                 break;
-            case KeyEvent.VK_W:
+            case KeyEvent.VK_SPACE:
                 player.setJump(true);
-                break;
-            case KeyEvent.VK_J:
-                player.setAttacking(true);
                 break;
             case KeyEvent.VK_ESCAPE:
                 paused = !paused;
@@ -144,11 +141,8 @@ public class Playing extends State implements Statemethods {
             case KeyEvent.VK_D:
                 player.setRight(false);
                 break;
-            case KeyEvent.VK_W:
+            case KeyEvent.VK_SPACE:
                 player.setJump(false);
-                break;
-            case KeyEvent.VK_J:
-                player.setAttacking(false);
                 break;
         }
 

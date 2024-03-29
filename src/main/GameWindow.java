@@ -21,14 +21,14 @@ public class GameWindow {
         // Add the game panel to the window
         jframe.add(gamePanel);
 
-        // Center the window on the screen
-        jframe.setLocationRelativeTo(null);
-
         // Disable window resizing
         jframe.setResizable(false);
 
         // Pack the components within the frame
         jframe.pack();
+
+        // Center the window on the screen
+        jframe.setLocationRelativeTo(null);
 
         // Make the window visible
         jframe.setVisible(true);
