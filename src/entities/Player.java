@@ -5,8 +5,8 @@ import static utilz.HelpMethods.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Float;
 import java.awt.image.BufferedImage;
 
 import gamestates.Playing;
@@ -44,7 +44,7 @@ public class Player extends Entity {
     private int healthBarXStart = (int) (34 * Game.SCALE);
     private int healthBarYStart = (int) (14 * Game.SCALE);
 
-    private int maxHealth = 10;
+    private int maxHealth = 100;
     private int currentHealth = maxHealth;
     private int healthWidth = healthBarWidth;
 
@@ -63,6 +63,13 @@ public class Player extends Entity {
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.SCALE), (int) (27 * Game.SCALE));
         initAttackBox();
+    }
+
+    public void setSpawn(Point spawn) {
+        this.x = spawn.x;
+        this.y = spawn.y;
+        hitbox.x = x;
+        hitbox.y = y;
     }
 
     private void initAttackBox() {
@@ -117,7 +124,6 @@ public class Player extends Entity {
     private void drawAttackBox(Graphics g, int lvlOffsetX) {
         g.setColor(Color.red);
         g.drawRect((int) attackBox.x - lvlOffsetX, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
-
     }
 
     private void drawUI(Graphics g) {
@@ -224,7 +230,6 @@ public class Player extends Entity {
             return;
         inAir = true;
         airSpeed = jumpSpeed;
-
     }
 
     private void resetInAir() {

@@ -1,24 +1,69 @@
 package levels;
 
-// Class representing a game level
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import entities.Crabby;
+import main.Game;
+import static utilz.HelpMethods.GetLevelData;
+import static utilz.HelpMethods.GetCrabs;
+import static utilz.HelpMethods.GetPlayerSpawn;
+
 public class Level {
 
-    // Field declaration
-    private int[][] lvlData; // 2D array to store level data
+    private BufferedImage img;
+    private int[][] lvlData;
+    private ArrayList<Crabby> crabs;
+    private int lvlTilesWide;
+    private int maxTilesOffset;
+    private int maxLvlOffsetX;
+    private Point playerSpawn;
 
-    // Constructor
-    public Level(int[][] lvlData) {
-        this.lvlData = lvlData; // Initialize the level data with the provided array
+    public Level(BufferedImage img) {
+        this.img = img;
+        createLevelData();
+        createEnemies();
+        calcLvlOffsets();
+        calcPlayerSpawn();
     }
 
-    // Method to get the sprite index at a specific position in the level
+    private void calcPlayerSpawn() {
+        playerSpawn = GetPlayerSpawn(img);
+    }
+
+    private void calcLvlOffsets() {
+        lvlTilesWide = img.getWidth();
+        maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
+        maxLvlOffsetX = Game.TILES_SIZE * maxTilesOffset;
+    }
+
+    private void createEnemies() {
+        crabs = GetCrabs(img);
+    }
+
+    private void createLevelData() {
+        lvlData = GetLevelData(img);
+    }
+
     public int getSpriteIndex(int x, int y) {
-        return lvlData[y][x]; // Return the sprite index at the given coordinates in the level data
+        return lvlData[y][x];
     }
 
-    // Method to get the level data
     public int[][] getLevelData() {
         return lvlData;
+    }
+
+    public int getLvlOffset() {
+        return maxLvlOffsetX;
+    }
+
+    public ArrayList<Crabby> getCrabs() {
+        return crabs;
+    }
+
+    public Point getPlayerSpawn() {
+        return playerSpawn;
     }
 
 }
