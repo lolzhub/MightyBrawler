@@ -28,7 +28,7 @@ public class AudioPlayer {
 
     private Clip[] songs, effects;
     private int currentSongId;
-    private float volume = 1f;
+    private float volume = 0.5f;
     private boolean songMute, effectMute;
     private Random rand = new Random();
 
@@ -104,7 +104,8 @@ public class AudioPlayer {
     }
 
     public void playEffect(int effect) {
-        effects[effect].setMicrosecondPosition(0);
+        if (effects[effect].getMicrosecondPosition() > 0)
+            effects[effect].setMicrosecondPosition(0);
         effects[effect].start();
     }
 
