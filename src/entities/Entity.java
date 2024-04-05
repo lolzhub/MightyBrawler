@@ -13,22 +13,25 @@ import main.Game;
 
 public abstract class Entity {
 
-    protected float x, y;
-    protected int width, height;
-    protected Rectangle2D.Float hitbox;
-    protected int aniTick, aniIndex;
-    protected int state;
-    protected float airSpeed;
-    protected boolean inAir = false;
-    protected int maxHealth;
-    protected int currentHealth;
-    protected Rectangle2D.Float attackBox;
-    protected float walkSpeed;
+    // Fields to store entity position, dimensions, hitbox, animation state, health, etc.
+    protected float x, y; // Entity position
+    protected int width, height; // Entity dimensions
+    protected Rectangle2D.Float hitbox; // Hitbox for collision detection
+    protected int aniTick, aniIndex; // Animation tick and index
+    protected int state; // Current state of the entity
+    protected float airSpeed; // Speed when entity is in the air
+    protected boolean inAir = false; // Flag indicating whether entity is in the air
+    protected int maxHealth; // Maximum health of the entity
+    protected int currentHealth; // Current health of the entity
+    protected Rectangle2D.Float attackBox; // Hitbox for attack detection
+    protected float walkSpeed; // Speed of walking/movement
 
-    protected int pushBackDir;
-    protected float pushDrawOffset;
-    protected int pushBackOffsetDir = UP;
+    // Fields for push-back effect
+    protected int pushBackDir; // Direction of push-back
+    protected float pushDrawOffset; // Offset for drawing push-back effect
+    protected int pushBackOffsetDir = UP; // Direction of push-back offset
 
+    // Constructor to initialize entity with position and dimensions
     public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
@@ -36,10 +39,12 @@ public abstract class Entity {
         this.height = height;
     }
 
+    // Method to update push-back effect's draw offset
     protected void updatePushBackDrawOffset() {
         float speed = 0.95f;
         float limit = -30f;
 
+        // Update push-back offset based on direction
         if (pushBackOffsetDir == UP) {
             pushDrawOffset -= speed;
             if (pushDrawOffset <= limit)
@@ -51,6 +56,7 @@ public abstract class Entity {
         }
     }
 
+    // Method to apply push-back effect
     protected void pushBack(int pushBackDir, int[][] lvlData, float speedMulti) {
         float xSpeed = 0;
         if (pushBackDir == LEFT)
@@ -58,36 +64,44 @@ public abstract class Entity {
         else
             xSpeed = walkSpeed;
 
+        // Move hitbox horizontally based on push-back direction and speed
         if (CanMoveHere(hitbox.x + xSpeed * speedMulti, hitbox.y, hitbox.width, hitbox.height, lvlData))
             hitbox.x += xSpeed * speedMulti;
     }
 
+    // Method to draw the attack hitbox
     protected void drawAttackBox(Graphics g, int xLvlOffset) {
         g.setColor(Color.red);
         g.drawRect((int) (attackBox.x - xLvlOffset), (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
     }
 
+    // Method to draw the entity's hitbox
     protected void drawHitbox(Graphics g, int xLvlOffset) {
         g.setColor(Color.PINK);
         g.drawRect((int) hitbox.x - xLvlOffset, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
     }
 
+    // Method to initialize the hitbox
     protected void initHitbox(int width, int height) {
         hitbox = new Rectangle2D.Float(x, y, (int) (width * Game.SCALE), (int) (height * Game.SCALE));
     }
 
+    // Getter for hitbox
     public Rectangle2D.Float getHitbox() {
         return hitbox;
     }
 
+    // Getter for state
     public int getState() {
         return state;
     }
 
+    // Getter for animation index
     public int getAniIndex() {
         return aniIndex;
     }
 
+    // Method to set a new state for the entity
     protected void newState(int state) {
         this.state = state;
         aniTick = 0;
